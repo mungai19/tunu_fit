@@ -1,0 +1,15 @@
+{
+  "name": "tunu-fit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tunu Fit: a consistency-first fitness web app (home + gym) with M-Pesa subscriptions and a Tunu Points reward system.",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/*.test.js\""
+  }
+}

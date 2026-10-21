@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tunu Fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#16171a;--card:#202126;--line:#34353c;--gold:#ffc800;--gold2:#ffe44d;--tx:#f5f5f0;--mut:#9fa0a8;--bad:#e5645a;--inp:#2a2b31;--bar:#2e2f36;--navbg:#16171aee;--h1:#2a2b31;--glow:#ffc80040;--glow2:#ffc8001f;--glow3:#ffe44d0d;--gs:#ffc80044;--ps:#ffc80055;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 Sora,system-ui,sans-serif;max-width:520px;margin:0 auto;padding:16px 16px 90px}
+h1,h2,h3{margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+.hero{background:radial-gradient(420px 220px at 100% 0,var(--glow),transparent),linear-gradient(160deg,var(--h1),var(--bg));border-color:var(--gold)}
+.big{font-size:44px;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.mut{color:var(--mut);font-size:13px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+button,select,input{font:inherit;border-radius:12px;border:1px solid var(--line);background:var(--inp);color:var(--tx);padding:10px 14px}
+button{cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+.go{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#000;font-weight:800;border:0;width:100%;padding:14px;font-size:16px;box-shadow:0 6px 24px var(--gs)}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.bar{height:10px;background:var(--bar);border-radius:9px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .6s}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;background:var(--navbg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav div{display:flex;max-width:520px;width:100%;gap:4px}
+nav button{flex:1;border:0;background:none;color:var(--mut);padding:8px 2px;font-size:12px}
+nav button.on{color:var(--gold);font-weight:800}
+.badge{display:inline-flex;flex-direction:column;align-items:center;width:30%;margin:4px 1%;padding:10px 4px;border:1px solid var(--line);border-radius:14px;text-align:center;font-size:12px;vertical-align:top}
+.badge b{font-size:28px;filter:grayscale(1) opacity(.35)}.badge.got{border-color:var(--gold)}.badge.got b{filter:none}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;font-size:12px}
+.d{padding:8px 0;border-radius:10px;border:1px solid var(--line)}.d.done{background:var(--gold);color:#000}.d.miss{border-color:var(--bad);color:var(--bad)}.d.grace{border-color:#6aa3ff;color:#6aa3ff}
+.pop{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translate(-50%,-160%);width:min(92vw,480px);background:linear-gradient(90deg,var(--gold),var(--gold2));color:#000;border-radius:14px;padding:14px 16px;font-weight:800;z-index:50;transition:transform .5s;box-shadow:0 8px 30px var(--ps)}
+.pop.show{transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}.modal.show{display:flex}
+.modal .card{width:100%;max-width:420px;margin:0;text-align:center}
+.sch{display:grid;grid-template-columns:44px 1fr 1fr 1fr;gap:6px;align-items:center;margin:6px 0}
+.sch input,.sch select{width:100%;padding:8px 6px}
+.c{position:fixed;top:-20px;width:9px;height:14px;z-index:60;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.6}}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(600px 320px at 85% -5%,var(--glow2),transparent),radial-gradient(500px 320px at 0 45%,var(--glow3),transparent)}
+:root[data-theme="light"]{--bg:#f6f5f0;--card:#fff;--line:#e2e0d4;--gold:#c48a00;--gold2:#f0b400;--tx:#1a1b1f;--mut:#62636b;--inp:#efede4;--bar:#e6e3d6;--navbg:#f6f5f0ee;--h1:#fff6d6;--glow:#f0b40040;--glow2:#f0b40026;--glow3:#f0b40012;--gs:#c48a0044;--ps:#c48a0055;color-scheme:light}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f6f5f0;--card:#fff;--line:#e2e0d4;--gold:#c48a00;--gold2:#f0b400;--tx:#1a1b1f;--mut:#62636b;--inp:#efede4;--bar:#e6e3d6;--navbg:#f6f5f0ee;--h1:#fff6d6;--glow:#f0b40040;--glow2:#f0b40026;--glow3:#f0b40012;--gs:#c48a0044;--ps:#c48a0055;color-scheme:light}}
+#th{padding:6px 12px;font-size:18px;line-height:1}
+.brand{font-weight:800;font-size:24px;letter-spacing:-.04em;margin:4px 0 2px}.brand b{background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.vid video{width:100%;border-radius:12px;background:#000;margin-bottom:10px;max-height:320px}
+@media(prefers-reduced-motion:reduce){.c{display:none}.pop,.bar i{transition:none}}
+</style></head><body>
+<div id="app"></div>
+<div class="pop" id="pop" role="alert"></div>
+<div class="modal" id="modal"><div class="card" id="mbody"></div></div>
+<nav><div id="nav"></div></nav>
+<script>
+const KEY='tunufit-v1',DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],PRICE=799,CAP=300;
+const RANKS=['Rookie','Regular','Grinder','Athlete','Beast','Legend'];
+const BADGES=[['first','🥇','First rep'],['s3','🔥','3-day streak'],['s7','⚡','7-day streak'],['gold','💰','KSh 100 saved'],['both','🌍','Home and gym'],['back','💪','Comeback'],['walk','👟','10 km walked']];
+const def=()=>({name:'',type:'Both',sched:DAYS.map((_,i)=>({on:i>0&&i<6&&i!=3,t:'18:00',l:45,w:'Home'})),log:{},xp:0,credit:0,streak:0,best:0,run:0,grace:2,gm:'',badges:[],types:{},paidUntil:'',hist:[]});
+let S=load(),tab='today',shown={};
+function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return def()}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>ymd(new Date());
+const lvl=x=>Math.floor(Math.sqrt(x/100))+1;
+const need=l=>(l*l)*100;
+const rank=l=>RANKS[Math.min(RANKS.length-1,Math.floor((l-1)/2))];
+const slot=()=>S.sched[new Date().getDay()];
+function confetti(){for(let i=0;i<40;i++){const e=document.createElement('i');e.className='c';e.style.left=Math.random()*100+'vw';e.style.background=['#ffc800','#ffe44d','#fff'][i%3];e.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),2600)}}
+function toast(m,ms=4200){const p=$('pop');p.textContent=m;p.classList.add('show');clearTimeout(p.t);p.t=setTimeout(()=>p.classList.remove('show'),ms)}
+function modal(h){$('mbody').innerHTML=h;$('modal').classList.add('show')}
+function closeM(){$('modal').classList.remove('show')}
+function addCredit(n,why){const before=S.credit;S.credit=Math.max(0,Math.min(CAP,S.credit+n));if(S.credit!==before)S.hist.unshift([today(),S.credit-before,why]);S.hist=S.hist.slice(0,30)}
+function award(){const g=[],has=k=>S.badges.includes(k),add=k=>{if(!has(k)){S.badges.push(k);g.push(BADGES.find(b=>b[0]==k))}};
+add('first');if(S.streak>=3)add('s3');if(S.streak>=7)add('s7');if(S.credit>=100)add('gold');if(S.types.Home&&S.types.Gym)add('both');return g}
+function checkin(){const t=today(),s=slot();if(S.log[t])return;
+ const wasBack=S.run>=2;S.log[t]='done';S.run=0;S.streak++;S.best=Math.max(S.best,S.streak);S.types[s.w]=1;
+ const gain=50+Math.min(S.streak,10)*5;const ol=lvl(S.xp);S.xp+=gain;addCredit(3,'Workout done');
+ if(wasBack&&!S.badges.includes('back'))S.badges.push('back'),toast('Badge: Comeback 💪');
+ const nb=award();save();confetti();
+ let m='+'+gain+' XP · KSh 3 off';if(lvl(S.xp)>ol)m='Level up! You are now '+rank(lvl(S.xp))+' (level '+lvl(S.xp)+')';if(nb.length)m+=' · '+nb.map(b=>b[1]+' '+b[2]).join(', ');
+ toast(m,5000);render()}
+function skip(){const t=today();if(S.log[t])return;S.log[t]='miss';S.streak=0;S.run++;if(S.run%2===0){addCredit(-2,'Two misses in a row')}save();toast(S.run%2===0?'Two misses in a row: KSh 2 added back':'Missed one. No cost yet, train next time.');render()}
+function useGrace(){const t=today(),m=t.slice(0,7);if(S.gm!==m){S.gm=m;S.grace=2}if(S.log[t]||S.grace<1)return;S.grace--;S.log[t]='grace';save();toast('Grace Day used. Your streak is safe.');render()}
+function openAt(){const s=slot();const [h,mi]=s.t.split(':');const st=new Date();st.setHours(+h,+mi,0,0);return st}
+function remind(demo){const s=slot();if(!s.on&&!demo)return;toast('⏰ '+(demo?'Preview: ':'')+'Workout starts in 15 min · '+s.w+' · '+s.t,7000)}
+setInterval(()=>{const s=slot();if(!s.on||S.log[today()])return;const mins=(openAt()-new Date())/60000;if(mins<=15&&mins>14&&!shown[today()]){shown[today()]=1;remind()}},20000);
+function weekQuest(){const now=new Date(),n=[];for(let i=0;i<7;i++){const d=new Date(now);d.setDate(now.getDate()-i);n.push(ymd(d))}return n.filter(k=>S.log[k]=='done').length}
+function dateStr(i){const d=new Date();d.setDate(d.getDate()-i);return ymd(d)}
+function topCard(){const l=lvl(S.xp),lo=need(l-1),hi=need(l),pc=Math.round((S.xp-lo)/(hi-lo)*100);
+ return `<div class="card hero"><div class="row"><div><div class="mut">${S.name||'Player'}</div><h2>${rank(l)} · Level ${l}</h2></div><div class="big">${S.streak}<span class="mut"> 🔥</span></div></div><div class="bar"><i style="width:${pc}%"></i></div><div class="mut">${S.xp} XP · ${hi-S.xp} to level ${l+1}</div></div>`}
+function vToday(){const s=slot(),t=today(),st=S.log[t],ready=(new Date()-openAt())/60000>=s.l/2;
+ let w='';for(let i=6;i>=0;i--){const k=dateStr(i),d=new Date(k+'T12:00');w+=`<div class="d ${S.log[k]||''}">${DAYS[d.getDay()]}<br>${S.log[k]=='done'?'✓':S.log[k]=='miss'?'✗':S.log[k]=='grace'?'♥':'·'}</div>`}
+ const done=weekQuest(),qs=[['Check in today',st=='done'],['Train 3 times this week ('+Math.min(done,3)+'/3)',done>=3],['Hit a 3-day streak',S.streak>=3]];
+ return topCard()+`<div class="card"><h3>${s.on?'Today: '+s.w+' workout at '+s.t:'Rest day'}</h3><div class="mut">${s.on?s.l+' minutes':'Nothing scheduled. Rest and recover.'}</div><br>
+ ${st?`<div class="big" style="font-size:20px">${st=='done'?'Done ✓ +XP earned':st=='grace'?'Grace Day used':'Missed today'}</div>`:s.on?`<button class="go" id="ci" ${ready?'':'disabled'}>I showed up</button><div class="mut" style="margin-top:8px">${ready?'Tap when you have trained.':'Unlocks once half the session time has passed.'}</div><div class="row" style="margin-top:10px"><button id="gr">Grace Day (${S.gm==today().slice(0,7)?S.grace:2} left)</button><button id="sk">Demo: miss today</button></div><div class="row" style="margin-top:8px"><button id="dm">Demo: unlock check-in</button><button id="pv">Preview reminder</button></div>`:'<button class="go" id="pv">Preview reminder</button>'}</div>
+ <div class="card"><h3>This week</h3><div class="days" style="margin-top:10px">${w}</div></div>
+ <div class="card"><h3>Quests</h3>${qs.map(q=>`<div class="row" style="padding:6px 0"><span>${q[1]?'✅':'⬜'} ${q[0]}</span></div>`).join('')}</div>`}
+function vPlan(){return `<div class="card"><h3>Your workout hours</h3><div class="mut">Pick the days and times you can train. You get a reminder 15 minutes before.</div><br>
+ ${S.sched.map((s,i)=>`<div class="sch"><label><input type="checkbox" data-i="${i}" data-k="on" ${s.on?'checked':''}> ${DAYS[i]}</label><input type="time" data-i="${i}" data-k="t" value="${s.t}"><select data-i="${i}" data-k="l">${[20,30,45,60,90].map(m=>`<option ${m==s.l?'selected':''}>${m}</option>`).join('')}</select><select data-i="${i}" data-k="w">${['Home','Gym'].map(m=>`<option ${m==s.w?'selected':''}>${m}</option>`).join('')}</select></div>`).join('')}
+ <div class="mut">Columns: day, start time, minutes, place.</div></div>
+ <div class="card"><label>Your name <input id="nm" value="${S.name}" placeholder="Name"></label><br><br><button id="rs">Reset all progress</button></div>`}
+function vTrophy(){const l=lvl(S.xp);return topCard()+`<div class="card"><h3>Trophies</h3><div class="mut">${S.badges.length} of ${BADGES.length} unlocked</div><div style="margin-top:8px">${BADGES.map(b=>`<div class="badge ${S.badges.includes(b[0])?'got':''}"><b>${b[1]}</b>${b[2]}</div>`).join('')}</div></div><div class="card"><h3>Ranks</h3>${RANKS.map((r,i)=>`<div class="row" style="padding:4px 0;${rank(l)==r?'color:var(--gold);font-weight:800':'color:var(--mut)'}"><span>${r}</span><span>level ${i*2+1}+</span></div>`).join('')}</div>`}
+function vPay(){const due=Math.max(0,PRICE-S.credit),paid=S.paidUntil&&S.paidUntil>=today();
+ return `<div class="card hero"><div class="mut">Tunu Fit+ this month</div><div class="big">KSh ${due}</div><div class="mut">KSh ${PRICE} minus KSh ${S.credit} earned (max KSh ${CAP})</div><div class="bar"><i style="width:${S.credit/CAP*100}%"></i></div></div>
+ <div class="card"><h3>How points work</h3><div class="mut">Each scheduled workout done: KSh 3 off.<br>Every 2 misses in a row: KSh 2 back on.<br>One miss costs nothing. Credit never goes below zero.</div></div>
+ <div class="card">${paid?`<h3>Paid ✓</h3><div class="mut">Active until ${S.paidUntil}</div>`:`<button class="go" id="pay">Pay KSh ${due} with M-Pesa</button><div class="mut" style="margin-top:8px">Demo mode: no real money moves.</div>`}</div>
+ <div class="card"><h3>Credit history</h3>${S.hist.length?S.hist.map(h=>`<div class="row"><span class="mut">${h[0]} ${h[2]}</span><b style="color:${h[1]>0?'var(--gold)':'var(--bad)'}">${h[1]>0?'-':'+'}KSh ${Math.abs(h[1])}</b></div>`).join(''):'<div class="mut">Check in to start earning.</div>'}</div>`}
+function render(){$('app').innerHTML='<div class="row"><div class="brand">tunu<b>fit</b></div><button id="th" aria-label="Switch between light and dark mode">'+(eff()=='light'?'🌙':'☀️')+'</button></div>'+(tab=='today'?vToday():tab=='plan'?vPlan():tab=='trophy'?vTrophy():tab=='coach'?vCoach():tab=='walk'?vWalk():vPay());
+ $('nav').innerHTML=[['today','Today'],['walk','Walk'],['coach','Coach'],['plan','Hours'],['trophy','Trophies'],['pay','Pay']].map(t=>`<button class="${tab==t[0]?'on':''}" data-t="${t[0]}">${t[1]}</button>`).join('');
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+ const g=id=>$(id),on=(id,f)=>g(id)&&(g(id).onclick=f);
+ on('ci',checkin);on('gr',useGrace);on('sk',skip);on('pv',()=>remind(true));on('dm',()=>{window.__u=1;const b=g('ci');b.disabled=false});on('pay',pay);
+ on('rs',()=>{if(confirm('Delete all progress?')){S=def();save();tab='today';render()}});
+ if(tab=='coach')bindCoach();if(tab=='walk')bindWalk();on('th',toggleTheme);if(g('nm'))g('nm').oninput=e=>{S.name=e.target.value;save()};
+ document.querySelectorAll('[data-k]').forEach(e=>e.onchange=()=>{const s=S.sched[e.dataset.i],k=e.dataset.k;s[k]=k=='on'?e.checked:k=='l'?+e.value:e.value;save()})}
+function pay(){const due=Math.max(0,PRICE-S.credit);modal(`<h3>M-Pesa payment</h3><div class="mut">Enter your Safaricom number. You will get a prompt on your phone.</div><br><input id="ph" inputmode="tel" placeholder="07XX XXX XXX" style="width:100%"><br><br><button class="go" id="sp">Send prompt for KSh ${due}</button><br><br><button id="cx">Cancel</button>`);
+ $('cx').onclick=closeM;$('sp').onclick=()=>{const v=$('ph').value.replace(/\D/g,'');if(v.length<9){$('ph').style.borderColor='var(--bad)';$('ph').placeholder='Enter a valid number';return}
+ $('mbody').innerHTML='<h3>Check your phone…</h3><div class="mut">Enter your M-Pesa PIN to approve KSh '+due+'. (Simulated)</div>';
+ setTimeout(()=>{const d=new Date();d.setDate(d.getDate()+30);S.paidUntil=ymd(d);S.credit=0;S.hist=[];save();$('mbody').innerHTML='<h3>Payment received ✓</h3><div class="mut">Active for 30 days. Your credit starts fresh.</div><br><button class="go" id="ok">Back to the game</button>';$('ok').onclick=()=>{closeM();render()};confetti()},2200)}}
+const eff=()=>S.theme||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+function applyTheme(){if(S.theme)document.documentElement.dataset.theme=S.theme}
+function toggleTheme(){S.theme=eff()=='light'?'dark':'light';applyTheme();save();render()}
+applyTheme();
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+let V=[],dbr=null,asr=null,usr=null,isCoach=false,vnote='';
+(async()=>{try{const c=window.claude;if(!c||!c.use)return;dbr=await c.use('db');asr=await c.use('assets');usr=await c.use('user');isCoach=!!(asr&&usr&&usr.canEdit());
+ if(dbr)dbr.collection('videos').orderBy('at','desc').onSnapshot(s=>{V=s.docs.map(d=>Object.assign({id:d.id},d.data()));if(tab=='coach')render()},()=>{});
+ if(tab=='coach')render()}catch(e){}})();
+function vCoach(){
+ const lib=V.map(v=>`<div class="card vid"><video src="${esc(v.url)}" controls playsinline preload="metadata"></video><h3>${esc(v.title)}</h3><div class="mut">${esc(v.cat)}, ${esc(v.lvl)}</div>${isCoach?`<br><button data-del="${esc(v.id)}" data-a="${esc(v.aid)}">Remove video</button>`:''}</div>`).join('');
+ const up=isCoach?`<div class="card"><h3>Post a workout video</h3><div class="mut">MP4 or MOV, up to 20 MB each.</div><br><input id="vt" placeholder="Video title" style="width:100%"><div class="row" style="margin:8px 0"><select id="vc">${['Home','Gym','Mobility','Nutrition'].map(x=>`<option>${x}</option>`).join('')}</select><select id="vl">${['Beginner','Intermediate','Advanced'].map(x=>`<option>${x}</option>`).join('')}</select></div><input id="vf" type="file" accept="video/*" style="width:100%"><br><br><button class="go" id="vu">Upload video</button><div class="mut" id="vn" style="margin-top:8px">${vnote}</div></div>`:'';
+ return `<div class="card hero"><h2>Train with your coach</h2><div class="mut">Watch a session, do it, then check in on Today to earn XP.</div></div>`+(dbr?(lib||`<div class="card"><h3>No videos yet</h3><div class="mut">${isCoach?'Upload your first workout below.':'Your coach will post workouts here soon.'}</div></div>`):'<div class="card mut">Coaching videos load when this page is opened from your claude.ai link.</div>')+up}
+function bindCoach(){const u=$('vu');if(u)u.onclick=upVid;document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Remove this video for everyone?'))return;try{await dbr.collection('videos').doc(b.dataset.del).delete();await asr.delete(b.dataset.a)}catch(e){vnote='Could not remove: '+(e.message||e.code)}})}
+async function upVid(){const f=$('vf').files[0],t=$('vt').value.trim();
+ if(!f||!t){vnote='Add a title and choose a video.';return render()}
+ if(f.size>20*1024*1024){vnote='That file is over 20 MB. Trim or compress it, then try again.';return render()}
+ $('vn').textContent='Uploading…';$('vu').disabled=true;
+ try{const r=await asr.upload(f);await dbr.collection('videos').doc('v'+Date.now()).set({title:t,cat:$('vc').value,lvl:$('vl').value,url:r.url,aid:r.id,at:Date.now()});vnote='Posted ✓'}catch(e){vnote='Upload failed: '+(e.message||e.code||'try again')}
+ render()}
+let wnote='',gps={id:null,last:null,dist:0};
+const W=()=>S.walk||(S.walk={}),G=()=>S.wgoal||3,km=n=>(Math.round(n*100)/100).toFixed(2),totKm=()=>Object.values(W()).reduce((a,b)=>a+b,0);
+function addKm(k){const t=today(),was=W()[t]||0;W()[t]=was+k;const hit=was<G()&&W()[t]>=G();S.xp+=Math.round(k*10)+(hit?40:0);let nb=false;if(totKm()>=10&&!S.badges.includes('walk')){S.badges.push('walk');nb=true}save();if(hit){confetti();toast('Daily walk goal reached! +40 XP',5000)}else if(nb){toast('Badge: 👟 10 km walked',5000)}render()}
+function hav(a,b){const R=6371,r=Math.PI/180,dl=(b.latitude-a.latitude)*r,dn=(b.longitude-a.longitude)*r,x=Math.sin(dl/2)**2+Math.cos(a.latitude*r)*Math.cos(b.latitude*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function startGps(){if(!navigator.geolocation){wnote='GPS is not available here. Log your distance by hand below.';return render()}
+ gps.dist=0;gps.last=null;wnote='Walking. Keep this page open.';
+ gps.id=navigator.geolocation.watchPosition(p=>{const c=p.coords;if(c.accuracy>30)return;if(!gps.last){gps.last=c}else{const d=hav(gps.last,c);if(d>0.003){if(d<0.2)gps.dist+=d;gps.last=c}}if(tab=='walk'&&$('live'))$('live').textContent=km(gps.dist)+' km'},e=>{stopGps(false);wnote='Could not get your location ('+e.message+'). Log your distance by hand below.';render()},{enableHighAccuracy:true,maximumAge:2000});render()}
+function stopGps(sv){if(gps.id!=null)navigator.geolocation.clearWatch(gps.id);gps.id=null;if(sv&&gps.dist>0.01){wnote='';addKm(gps.dist)}else{if(sv)wnote='No distance recorded.';render()}}
+function vWalk(){const d=W()[today()]||0,pc=Math.min(100,d/G()*100),live=gps.id!=null,days=[];
+ for(let i=6;i>=0;i--){const k=dateStr(i);days.push([DAYS[new Date(k+'T12:00').getDay()],W()[k]||0])}
+ const mx=Math.max(G(),...days.map(x=>x[1])),wk=days.reduce((a,b)=>a+b[1],0);
+ return `<div class="card hero"><div class="mut">Walked today</div><div class="big">${km(d)} km</div><div class="bar"><i style="width:${pc}%"></i></div><div class="mut">Goal ${G()} km${d>=G()?' reached ✓':''}. Every km earns 10 XP.</div></div>
+ <div class="card"><h3>Track a walk</h3><br>${live?`<div class="big" id="live">${km(gps.dist)} km</div><br><button class="go" id="gs">Finish walk</button>`:`<button class="go" id="gg">Start GPS walk</button>`}<div class="mut" style="margin-top:8px">${wnote||'Uses your phone location. Keep the page open while you walk.'}</div></div>
+ <div class="card"><h3>Log a walk by hand</h3><br><div class="row"><input id="wk" type="number" min="0" step="0.1" placeholder="Distance in km" style="flex:1"><button id="wa">Add</button></div><br><label class="mut">Daily goal in km <input id="wg" type="number" min="1" step="0.5" value="${G()}" style="width:80px"></label></div>
+ <div class="card"><h3>Last 7 days</h3><div style="display:flex;gap:6px;align-items:flex-end;height:110px;margin-top:10px">${days.map(x=>`<div style="flex:1;text-align:center;font-size:11px"><div style="height:${Math.max(3,x[1]/mx*80)}px;background:linear-gradient(var(--gold2),var(--gold));border-radius:6px 6px 2px 2px"></div>${x[0]}</div>`).join('')}</div><div class="mut" style="margin-top:8px">This week: ${km(wk)} km. All time: ${km(totKm())} km.</div></div>`}
+function bindWalk(){const a=(i,f)=>$(i)&&($(i).onclick=f);a('gg',startGps);a('gs',()=>stopGps(true));a('wa',()=>{const v=parseFloat($('wk').value);if(!(v>0)||v>100){wnote='Enter a distance between 0.1 and 100 km.';return render()}wnote='';addKm(v)});if($('wg'))$('wg').onchange=e=>{const v=parseFloat(e.target.value);if(v>=1){S.wgoal=v;save();render()}}}
+render();
+</script></body></html>
