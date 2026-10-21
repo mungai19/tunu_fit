@@ -42,7 +42,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 #th{padding:6px 12px;font-size:18px;line-height:1}
 .brand{font-weight:800;font-size:24px;letter-spacing:-.04em;margin:4px 0 2px}.brand b{background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .vid video{width:100%;border-radius:12px;background:#000;margin-bottom:10px;max-height:320px}
-@media(prefers-reduced-motion:reduce){.c{display:none}.pop,.bar i{transition:none}}
+.greet{margin:10px 0 4px}.greet h2{font-size:22px;letter-spacing:-.02em}
+.ringw{position:relative;width:120px;height:120px;flex:none}.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.rc b{font-size:38px;line-height:1;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.rg{transition:stroke-dashoffset 1s ease}
+.streak{display:inline-block;margin-top:8px;padding:5px 12px;border-radius:99px;background:var(--inp);font-weight:800;font-size:13px}
+.warn{border-color:var(--gold);background:linear-gradient(90deg,var(--card),var(--h1))}
+.pulse{animation:pl 2.4s ease-in-out infinite}@keyframes pl{50%{box-shadow:0 0 0 6px var(--glow2)}}
+button:active{transform:scale(.97)}
+nav button span{display:block;font-size:18px;line-height:1.3}
+@media(prefers-reduced-motion:reduce){.c{display:none}.pulse{animation:none}.pop,.bar i,.rg{transition:none}}
 </style></head><body>
 <div id="app"></div>
 <div class="pop" id="pop" role="alert"></div>
@@ -85,14 +93,15 @@ setInterval(()=>{const s=slot();if(!s.on||S.log[today()])return;const mins=(open
 function weekQuest(){const now=new Date(),n=[];for(let i=0;i<7;i++){const d=new Date(now);d.setDate(now.getDate()-i);n.push(ymd(d))}return n.filter(k=>S.log[k]=='done').length}
 function dateStr(i){const d=new Date();d.setDate(d.getDate()-i);return ymd(d)}
 function topCard(){const l=lvl(S.xp),lo=need(l-1),hi=need(l),pc=Math.round((S.xp-lo)/(hi-lo)*100);
- return `<div class="card hero"><div class="row"><div><div class="mut">${S.name||'Player'}</div><h2>${rank(l)} · Level ${l}</h2></div><div class="big">${S.streak}<span class="mut"> 🔥</span></div></div><div class="bar"><i style="width:${pc}%"></i></div><div class="mut">${S.xp} XP · ${hi-S.xp} to level ${l+1}</div></div>`}
+ const C=2*Math.PI*52,off=C*(1-pc/100);
+ return `<div class="card hero"><div class="row" style="flex-wrap:nowrap"><div class="ringw"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><defs><linearGradient id="rgd"><stop offset="0" style="stop-color:var(--gold)"/><stop offset="1" style="stop-color:var(--gold2)"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="none" stroke="var(--bar)" stroke-width="10"/><circle class="rg" cx="60" cy="60" r="52" fill="none" stroke="url(#rgd)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 60 60)"/></svg><div class="rc"><b>${l}</b><span class="mut">level</span></div></div><div style="flex:1"><div class="mut">${S.name||'Player'}</div><h2>${rank(l)}</h2><div class="mut">${hi-S.xp} XP to level ${l+1}</div><div class="streak">🔥 ${S.streak} day streak</div></div></div></div>`}
 function vToday(){const s=slot(),t=today(),st=S.log[t],ready=(new Date()-openAt())/60000>=s.l/2;
  let w='';for(let i=6;i>=0;i--){const k=dateStr(i),d=new Date(k+'T12:00');w+=`<div class="d ${S.log[k]||''}">${DAYS[d.getDay()]}<br>${S.log[k]=='done'?'✓':S.log[k]=='miss'?'✗':S.log[k]=='grace'?'♥':'·'}</div>`}
  const done=weekQuest(),qs=[['Check in today',st=='done'],['Train 3 times this week ('+Math.min(done,3)+'/3)',done>=3],['Hit a 3-day streak',S.streak>=3]];
- return topCard()+`<div class="card"><h3>${s.on?'Today: '+s.w+' workout at '+s.t:'Rest day'}</h3><div class="mut">${s.on?s.l+' minutes':'Nothing scheduled. Rest and recover.'}</div><br>
+ return greet()+topCard()+nudge()+`<div class="card"><h3>${s.on?'Today: '+s.w+' workout at '+s.t:'Rest day'}</h3><div class="mut">${s.on?s.l+' minutes':'Nothing scheduled. Rest and recover.'}</div><br>
  ${st?`<div class="big" style="font-size:20px">${st=='done'?'Done ✓ +XP earned':st=='grace'?'Grace Day used':'Missed today'}</div>`:s.on?`<button class="go" id="ci" ${ready?'':'disabled'}>I showed up</button><div class="mut" style="margin-top:8px">${ready?'Tap when you have trained.':'Unlocks once half the session time has passed.'}</div><div class="row" style="margin-top:10px"><button id="gr">Grace Day (${S.gm==today().slice(0,7)?S.grace:2} left)</button><button id="sk">Demo: miss today</button></div><div class="row" style="margin-top:8px"><button id="dm">Demo: unlock check-in</button><button id="pv">Preview reminder</button></div>`:'<button class="go" id="pv">Preview reminder</button>'}</div>
  <div class="card"><h3>This week</h3><div class="days" style="margin-top:10px">${w}</div></div>
- <div class="card"><h3>Quests</h3>${qs.map(q=>`<div class="row" style="padding:6px 0"><span>${q[1]?'✅':'⬜'} ${q[0]}</span></div>`).join('')}</div>`}
+ <div class="card"><h3>Quests</h3>${qs.map(q=>`<div class="row" style="padding:6px 0"><span>${q[1]?'✅':'⬜'} ${q[0]}</span></div>`).join('')}</div><button class="go" id="sh">Share my streak</button>`}
 function vPlan(){return `<div class="card"><h3>Your workout hours</h3><div class="mut">Pick the days and times you can train. You get a reminder 15 minutes before.</div><br>
  ${S.sched.map((s,i)=>`<div class="sch"><label><input type="checkbox" data-i="${i}" data-k="on" ${s.on?'checked':''}> ${DAYS[i]}</label><input type="time" data-i="${i}" data-k="t" value="${s.t}"><select data-i="${i}" data-k="l">${[20,30,45,60,90].map(m=>`<option ${m==s.l?'selected':''}>${m}</option>`).join('')}</select><select data-i="${i}" data-k="w">${['Home','Gym'].map(m=>`<option ${m==s.w?'selected':''}>${m}</option>`).join('')}</select></div>`).join('')}
  <div class="mut">Columns: day, start time, minutes, place.</div></div>
@@ -104,12 +113,12 @@ function vPay(){const due=Math.max(0,PRICE-S.credit),paid=S.paidUntil&&S.paidUnt
  <div class="card">${paid?`<h3>Paid ✓</h3><div class="mut">Active until ${S.paidUntil}</div>`:`<button class="go" id="pay">Pay KSh ${due} with M-Pesa</button><div class="mut" style="margin-top:8px">Demo mode: no real money moves.</div>`}</div>
  <div class="card"><h3>Credit history</h3>${S.hist.length?S.hist.map(h=>`<div class="row"><span class="mut">${h[0]} ${h[2]}</span><b style="color:${h[1]>0?'var(--gold)':'var(--bad)'}">${h[1]>0?'-':'+'}KSh ${Math.abs(h[1])}</b></div>`).join(''):'<div class="mut">Check in to start earning.</div>'}</div>`}
 function render(){$('app').innerHTML='<div class="row"><div class="brand">tunu<b>fit</b></div><button id="th" aria-label="Switch between light and dark mode">'+(eff()=='light'?'🌙':'☀️')+'</button></div>'+(tab=='today'?vToday():tab=='plan'?vPlan():tab=='trophy'?vTrophy():tab=='coach'?vCoach():tab=='walk'?vWalk():vPay());
- $('nav').innerHTML=[['today','Today'],['walk','Walk'],['coach','Coach'],['plan','Hours'],['trophy','Trophies'],['pay','Pay']].map(t=>`<button class="${tab==t[0]?'on':''}" data-t="${t[0]}">${t[1]}</button>`).join('');
+ $('nav').innerHTML=[['today','Today'],['walk','Walk'],['coach','Coach'],['plan','Hours'],['trophy','Trophies'],['pay','Pay']].map(t=>`<button class="${tab==t[0]?'on':''}" data-t="${t[0]}"><span>${{today:'🏠',walk:'👟',coach:'🎥',plan:'⏰',trophy:'🏆',pay:'💳'}[t[0]]}</span>${t[1]}</button>`).join('');
  document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
  const g=id=>$(id),on=(id,f)=>g(id)&&(g(id).onclick=f);
  on('ci',checkin);on('gr',useGrace);on('sk',skip);on('pv',()=>remind(true));on('dm',()=>{window.__u=1;const b=g('ci');b.disabled=false});on('pay',pay);
  on('rs',()=>{if(confirm('Delete all progress?')){S=def();save();tab='today';render()}});
- if(tab=='coach')bindCoach();if(tab=='walk')bindWalk();on('th',toggleTheme);if(g('nm'))g('nm').oninput=e=>{S.name=e.target.value;save()};
+ if(tab=='coach')bindCoach();if(tab=='walk')bindWalk();on('th',toggleTheme);on('sh',share);document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()});if(g('nm'))g('nm').oninput=e=>{S.name=e.target.value;save()};
  document.querySelectorAll('[data-k]').forEach(e=>e.onchange=()=>{const s=S.sched[e.dataset.i],k=e.dataset.k;s[k]=k=='on'?e.checked:k=='l'?+e.value:e.value;save()})}
 function pay(){const due=Math.max(0,PRICE-S.credit);modal(`<h3>M-Pesa payment</h3><div class="mut">Enter your Safaricom number. You will get a prompt on your phone.</div><br><input id="ph" inputmode="tel" placeholder="07XX XXX XXX" style="width:100%"><br><br><button class="go" id="sp">Send prompt for KSh ${due}</button><br><br><button id="cx">Cancel</button>`);
  $('cx').onclick=closeM;$('sp').onclick=()=>{const v=$('ph').value.replace(/\D/g,'');if(v.length<9){$('ph').style.borderColor='var(--bad)';$('ph').placeholder='Enter a valid number';return}
@@ -151,5 +160,15 @@ function vWalk(){const d=W()[today()]||0,pc=Math.min(100,d/G()*100),live=gps.id!
  <div class="card"><h3>Log a walk by hand</h3><br><div class="row"><input id="wk" type="number" min="0" step="0.1" placeholder="Distance in km" style="flex:1"><button id="wa">Add</button></div><br><label class="mut">Daily goal in km <input id="wg" type="number" min="1" step="0.5" value="${G()}" style="width:80px"></label></div>
  <div class="card"><h3>Last 7 days</h3><div style="display:flex;gap:6px;align-items:flex-end;height:110px;margin-top:10px">${days.map(x=>`<div style="flex:1;text-align:center;font-size:11px"><div style="height:${Math.max(3,x[1]/mx*80)}px;background:linear-gradient(var(--gold2),var(--gold));border-radius:6px 6px 2px 2px"></div>${x[0]}</div>`).join('')}</div><div class="mut" style="margin-top:8px">This week: ${km(wk)} km. All time: ${km(totKm())} km.</div></div>`}
 function bindWalk(){const a=(i,f)=>$(i)&&($(i).onclick=f);a('gg',startGps);a('gs',()=>stopGps(true));a('wa',()=>{const v=parseFloat($('wk').value);if(!(v>0)||v>100){wnote='Enter a distance between 0.1 and 100 km.';return render()}wnote='';addKm(v)});if($('wg'))$('wg').onchange=e=>{const v=parseFloat(e.target.value);if(v>=1){S.wgoal=v;save();render()}}}
+function greet(){const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening',q=['Show up today. Future you will say thanks.','Small steps, every day.','Consistency beats intensity.','One workout closer to your best self.','Your streak is your superpower.','Discipline is a gift to yourself.','Do it for the version of you that wins.'][new Date().getDate()%7];
+ return `<div class="greet"><h2>${g}${S.name?', '+esc(S.name):''}</h2><div class="mut">${q}</div></div>`}
+function nudge(){const s=slot(),st=S.log[today()];
+ if(!S.name&&!Object.keys(S.log).length)return `<div class="card pulse"><h3>Welcome to Tunu Fit 👋</h3><div class="mut">Add your name and pick your workout hours. Your first check-in starts your streak.</div><br><button class="go" data-go="plan">Set up my plan</button></div>`;
+ if(s.on&&!st&&S.streak>0)return `<div class="card warn"><b>Protect your ${S.streak}-day streak</b><div class="mut">Your ${s.w} workout is at ${s.t}. Show up and keep it alive.</div></div>`;
+ const nx=[[3,'3-day streak'],[7,'7-day streak']].find(x=>S.streak<x[0]);
+ return nx?`<div class="card"><div class="row"><span>Next badge: ${nx[1]}</span><b>${nx[0]-S.streak} to go</b></div><div class="bar"><i style="width:${S.streak/nx[0]*100}%"></i></div></div>`:''}
+function share(){const t='I am on a '+S.streak+'-day streak on Tunu Fit at level '+lvl(S.xp)+'. Stay consistent with me!',u=location.href;
+ if(navigator.share)navigator.share({title:'Tunu Fit',text:t,url:u}).catch(e=>{if(e.name!=='AbortError')window.open('https://wa.me/?text='+encodeURIComponent(t+' '+u),'_blank')});else window.open('https://wa.me/?text='+encodeURIComponent(t+' '+u),'_blank')}
+{const o=confetti;confetti=function(){try{navigator.vibrate&&navigator.vibrate([60,40,90])}catch(e){}o()}}
 render();
 </script></body></html>
